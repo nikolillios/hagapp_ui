@@ -18,11 +18,14 @@ class AuthService {
         }
         console.log('returning data:' + JSON.stringify(response.data))
         // need to load data for all fields
+        console.log("did not get token")
         return response.data;
       });
   }
   logout() {
+    alert("IN")
     localStorage.removeItem("user");
+    console.log(localStorage.getItem("user"));
   }
   register(username, email, password) {
     return axios.post(API_URL + "create-user", null, {
@@ -35,7 +38,8 @@ class AuthService {
   }
 
   getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user'));
+    console.log("log" + (localStorage.getItem('user') ? "null" : localStorage.getItem('user')))
+    return (localStorage.getItem('user') ? false : JSON.parse(localStorage.getItem('user')));
   }
 }
 export default new AuthService();

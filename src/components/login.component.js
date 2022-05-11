@@ -22,9 +22,16 @@ export default class Login extends Component {
       username: "",
       password: "",
       loading: false,
-      message: ""
+      message: "",
+      navigate: this.props.navigate,
     };
   }
+
+  componentDidMount() {
+    console.log(this.props.navigate)
+    this.setState({ navigate: this.props.navigate });
+  }
+
   onChangeUsername(e) {
     this.setState({
       username: e.target.value
@@ -45,9 +52,8 @@ export default class Login extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       AuthService.login(this.state.username, this.state.password).then(
         () => {
-          console.log(this.props)
-          // this.props.history.replace("/profile");
-          window.location.reload();
+          this.state.navigate("/");
+          //window.location.reload();
         },
         error => {
           const resMessage =
