@@ -1,20 +1,12 @@
-import { render } from "@testing-library/react";
 import React from "react";
 import { useTable } from "react-table";
 
-function Table({ data }) {
+function FriendsTable({ data }) {
+  // Use the state and functions returned from useTable to build your UI
 
   const columns = React.useMemo(() => [{
-    Header: 'Id',
-    accessor: 'id'
-  },
-  {
-    Header: 'UserEmail',
-    accessor: 'userEmail',
-  },
-  {
-    Header: 'Description',
-    accessor: 'description',
+    Header: 'Username',
+    accessor: 'username'
   },
   {
     Header: 'Status',
@@ -22,19 +14,18 @@ function Table({ data }) {
   },
   ], []);
 
-  // Use the state and functions returned from useTable to build your UI
   const tableHooks = (hooks) => {
     hooks.visibleColumns.push((columns) => [
       ...columns,
       {
-        id: "Actions",
-        Header: "Actions",
+        id: "Edit",
+        Header: "Edit",
         Cell: ({ row }) => (
-          row.values.status == "open" ?
-            (<button onClick={() => alert("editing: " + row.values.userEmail)}>
+          row.values.status == "pending" ?
+            <button onClick={() => alert("editing: " + row.values.userEmail)}>
               Accept
-            </button>) : <div></div>
-
+            </button> :
+            <p></p>
         ),
       },
     ]);
@@ -74,4 +65,4 @@ function Table({ data }) {
   );
 }
 
-export default Table;
+export default FriendsTable;

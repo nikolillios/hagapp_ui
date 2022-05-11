@@ -1,34 +1,26 @@
 import { getByTestId } from '@testing-library/react';
-import React, { Component, useState } from 'react';
+import React, { Component, useState, Form, } from 'react';
 import AuthService from "../services/auth.service";
-import Table from './Table'
-//import "react-table/react-table.css";
+import Table from './Table';
+import FriendsTable from './FriendsTable';
+import FriendRequest from './friend_request.component';
+import './profile.css';
+import SettledChallengesTable from './SettledChallengesTable';
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
 
 
 export default function Profile() {
-
-  const columns = React.useMemo(() => [{
-    Header: 'Id',
-    accessor: 'id'
-  },
-  {
-    Header: 'UserEmail',
-    accessor: 'userEmail',
-  },
-  {
-    Header: 'Description',
-    accessor: 'description',
-  },
-  {
-    Header: 'Status',
-    accessor: 'status',
-  },
+  const challenges = React.useMemo(() => [
+    { id: "1", userEmail: "nikolillios09@gmail.com", description: "This is a challenge for you.", status: "open", result: " " },
+    { id: "2", userEmail: "nikolillios09@gmail.com", description: "Another challenge.", status: "accepted", result: " " },
+    { id: "3", userEmail: "kevin@gmail.com", description: "Another challenge2.", status: "finished", result: '1-0 kevin' },
+    { id: "4", userEmail: "kat@gmail.com", description: "Another challenge3.", status: "finished", result: '1-0 kat' },
   ]);
 
-  const challenges = React.useMemo(() => [
-    { id: "1", userEmail: "nikolillios09@gmail.com", description: "This is a challenge for you.", status: "open" },
-    { id: "2", userEmail: "nikolillios09@gmail.com", description: "Another challenge.", status: "accepted" },
+  const friends = React.useMemo(() => [
+    { username: "Kevin", email: "kxc4@cornell.edu", status: "friend" },
+    { username: "Mack", email: "mac4@cornell.edu", status: "pending" },
+    { username: "Will", email: "will@cornell.edu", status: "friend" },
   ]);
 
   const onRowClick = (state, rowInfo, column, instance) => {
@@ -43,16 +35,24 @@ export default function Profile() {
     }
   }
 
+  const filteredChallenges = challenges ? challenges.filter(challenge => challenge.status === "finished").map((challenge) => challenge) : [];
+
   return (
     <div className="container">
-      <>
-        <h1>Hello React!</h1>
+      <div>
+        <h3>Friends</h3>
+        <FriendsTable data={friends}></FriendsTable>
+        <h3>Send Friend Request</h3>
+        <FriendRequest></FriendRequest>
+      </div>
+      <div className="main">
         <div>
-          <Table columns={columns} data={challenges} gettrprops={onRowClick} />
-          <div>
-          </div>
+          <h1>Open challenges</h1>
+          <Table data={challenges} />
+          <h1>Settled</h1>
+          <SettledChallengesTable data={filteredChallenges}></SettledChallengesTable>
         </div>
-      </>
+      </div>
     </div >
   );
 }

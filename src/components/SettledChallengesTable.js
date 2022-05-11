@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { useTable } from "react-table";
 
-function Table({ data }) {
+function SettledChallengesTable({ data }) {
 
   const columns = React.useMemo(() => [{
     Header: 'Id',
@@ -17,8 +17,8 @@ function Table({ data }) {
     accessor: 'description',
   },
   {
-    Header: 'Status',
-    accessor: 'status',
+    Header: 'Result',
+    accessor: 'result',
   },
   ], []);
 
@@ -32,7 +32,7 @@ function Table({ data }) {
         Cell: ({ row }) => (
           row.values.status == "open" ?
             (<button onClick={() => alert("editing: " + row.values.userEmail)}>
-              Accept
+              Details
             </button>) : <div></div>
 
         ),
@@ -74,4 +74,4 @@ function Table({ data }) {
   );
 }
 
-export default Table;
+export default SettledChallengesTable;
