@@ -1,16 +1,17 @@
 import axios from "axios";
-const API_URL = "http://localhost:8080/";
+const API_URL = "https://hagapp-api.azure-api.net/user/";
 class AuthService {
   login(username, password) {
     return axios
       .post(API_URL + "login", {
-        username,
-        password
+        'uid': username,
+        'password': password
       })
       .then(response => {
         if (response.data.accessToken) {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
+        // need to load data for all fields
         return response.data;
       });
   }
@@ -19,11 +20,12 @@ class AuthService {
   }
   register(username, email, password) {
     return axios.post(API_URL + "create-user", {
-      username,
-      email,
-      password
+      uid: username,
+      email: email,
+      password: password
     });
   }
+
   getCurrentUser() {
     return JSON.parse(localStorage.getItem('user'));;
   }
