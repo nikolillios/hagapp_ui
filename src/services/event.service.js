@@ -24,12 +24,13 @@ class EventService {
 
   close(uid, event_id) {
     return axios
-      .post(API_URL + "close-event", {
-        headers: authHeader(), data: {
-          'uid': uid,
-          'id': event_id,
-        }
-      })
+      .get(API_URL + "close-event", { headers: authHeader() },
+        {
+          params: {
+            'uid': uid,
+            'id': event_id,
+          }
+        })
       .then(response => {
         if (response.message === "Request Successful") {
           // reload user data - for past andavailable events?
