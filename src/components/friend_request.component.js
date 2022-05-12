@@ -30,7 +30,7 @@ export default function FriendRequest() {
 
   return (
     <div>
-      <input type="text" onChange={onChangeUsername} value="username"></input>
+      <input type="text" onChange={onChangeUsername} value={friendUsername} placeholder="username"></input>
       <button onClick={sendRequest}>Send Friend Request</button>
     </div>
   )

@@ -52,8 +52,7 @@ const Login = ({ setToken }) => {
     setMsg("")
     setLoading(true)
     console.log("loading" + loading)
-    form.validateAll();
-    if (checkBtn.context._errors.length === 0) {
+    if (username.replace(' ', '') === username && password.length > 6) {
       AuthService.login(username, password).then(
         (data) => {
           console.log("navigating")
@@ -85,7 +84,7 @@ const Login = ({ setToken }) => {
           alt="profile-img"
           className="profile-img-card"
         />
-        <Form
+        <form
           onSubmit={handleLogin}
           ref={c => {
             setForm(c);
@@ -93,7 +92,7 @@ const Login = ({ setToken }) => {
         >
           <div className="form-group">
             <label htmlFor="username">Username</label>
-            <Input
+            <input
               type="text"
               className="form-control"
               name="username"
@@ -104,7 +103,7 @@ const Login = ({ setToken }) => {
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <Input
+            <input
               type="password"
               className="form-control"
               name="password"
@@ -131,13 +130,7 @@ const Login = ({ setToken }) => {
               </div>
             </div>
           )}
-          <CheckButton
-            style={{ display: "none" }}
-            ref={c => {
-              setCheckBtn(c);
-            }}
-          />
-        </Form>
+        </form>
       </div>
     </div>
   )

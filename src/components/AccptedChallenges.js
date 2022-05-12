@@ -1,29 +1,24 @@
-import { render } from "@testing-library/react";
 import React from "react";
 import { useTable } from "react-table";
 
-function SettledChallengesTable({ data }) {
+function AcceptedChallenges({ data }) {
 
   const columns = React.useMemo(() => [{
     Header: 'Id',
     accessor: 'id'
   },
   {
-    Header: 'Participants',
-    accessor: 'accepted-uids',
+    Header: 'Creator',
+    accessor: 'uid',
   },
   {
     Header: 'Description',
-    accessor: 'description',
+    accessor: 'notes',
   },
   {
-    Header: 'Result',
-    accessor: 'result',
-  },
-  {
-    Header: 'Notes',
-    accessor: 'additional-notes',
-  },
+    Header: 'Participants',
+    accessor: 'accepted-uids',
+  }
   ], []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -60,4 +55,4 @@ function SettledChallengesTable({ data }) {
   );
 }
 
-export default SettledChallengesTable;
+export default AcceptedChallenges;

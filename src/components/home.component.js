@@ -10,6 +10,7 @@ import IncomingFriendRequests from './incoming_friend_request';
 import { ChallengeDialogue } from './create_challenge.component';
 import UserService from 'services/user.service';
 import EventService from 'services/event.service';
+import AcceptedChallenges from './AccptedChallenges';
 
 
 export default function Home() {
@@ -78,7 +79,9 @@ export default function Home() {
         <div>
           <h1>Open challenges</h1>
           <Table data={React.useMemo(() => challenges, [])} />
-          <h1>Settled</h1>
+          <h3>Accepted</h3>
+          <AcceptedChallenges data={React.useMemo(() => challenges, [])} />
+          <h3>Settled</h3>
           <SettledChallengesTable data={React.useMemo(() => settled, [])}></SettledChallengesTable>
         </div>
       </div>

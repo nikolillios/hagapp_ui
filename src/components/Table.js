@@ -18,8 +18,8 @@ function Table({ data }) {
     accessor: 'notes',
   },
   {
-    Header: 'Status',
-    accessor: 'offered_uids',
+    Header: 'Accepted',
+    accessor: 'accepted_uids',
   },
   ], []);
 
