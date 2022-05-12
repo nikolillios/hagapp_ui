@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
 import React from "react";
 import { useTable } from "react-table";
+import './table.css'
 
 function Table({ data }) {
 
@@ -9,16 +10,16 @@ function Table({ data }) {
     accessor: 'id'
   },
   {
-    Header: 'UserEmail',
-    accessor: 'userEmail',
+    Header: 'Creator',
+    accessor: 'uid',
   },
   {
     Header: 'Description',
-    accessor: 'description',
+    accessor: 'notes',
   },
   {
     Header: 'Status',
-    accessor: 'status',
+    accessor: 'offered_uids',
   },
   ], []);
 

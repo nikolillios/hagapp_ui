@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import UserService from "services/user.service";
+import AuthService from "services/auth.service";
 
-export default function FriendRequest({ props }) {
+import './friend-request.css';
 
-  const [friend_username, set_friend_username] = useState("");
+export default function FriendRequest() {
+
+  const [friendUsername, setFriendUsername] = useState("");
 
   const onChangeUsername = (e) => {
-    set_friend_username(e.target.value)
+    setFriendUsername(e.target.value)
   };
 
   const required = value => {
@@ -21,32 +24,14 @@ export default function FriendRequest({ props }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    alert(friend_username);
-    return
-    //UserService.create_friend_request
-  };
+  const sendRequest = () => {
+    UserService.sendFriendRequest(AuthService.getCurrentUser().uid, friendUsername)
+  }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="username">Username</label>
-        <Input
-          type="text"
-          className="form-control"
-          name="username"
-          value={friend_username}
-          onChange={onChangeUsername}
-          validations={[required]}
-        />
-      </div>
-      <div className="form-group">
-        <button
-          className="btn btn-primary btn-block"
-        >
-          <span>Login</span>
-        </button>
-      </div>
-    </Form>
+    <div>
+      <input type="text" onChange={onChangeUsername} value="username"></input>
+      <button onClick={sendRequest}>Send Friend Request</button>
+    </div>
   )
 }

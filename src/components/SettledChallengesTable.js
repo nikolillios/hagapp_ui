@@ -22,29 +22,11 @@ function SettledChallengesTable({ data }) {
   },
   ], []);
 
-  // Use the state and functions returned from useTable to build your UI
-  const tableHooks = (hooks) => {
-    hooks.visibleColumns.push((columns) => [
-      ...columns,
-      {
-        id: "Actions",
-        Header: "Actions",
-        Cell: ({ row }) => (
-          row.values.status == "open" ?
-            (<button onClick={() => alert("editing: " + row.values.userEmail)}>
-              Details
-            </button>) : <div></div>
-
-        ),
-      },
-    ]);
-  };
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
-    }, tableHooks);
+    });
 
   // Render the UI for your table
   return (

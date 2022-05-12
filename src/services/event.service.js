@@ -1,19 +1,19 @@
 import axios from "axios";
 import authHeader from './auth-header';
-const API_URL = "http://hagapp-api.azure-api.net/user/";
+const API_URL = "https://hagapp-api.azure-api.net/event/";
 class EventService {
 
-  create(uid, event_id, offered_users, event_time, num_participants, notes) {
+  create(uid, description, offered_users, event_time, num_participants) {
     return axios
       .post(API_URL + "create-event", {
-        headers: authHeader(), data: {
-          'uid': uid,
-          'id': event_id,
-          'offered-users': offered_users,
-          'event-time': event_time,
-          'num-participants': num_participants,
-          'notes': notes
-        }
+        'uid': uid,
+        'id': Math.floor(Math.random() * 1e10),
+        'offered-users': offered_users,
+        'event-time': event_time,
+        'num-participants': num_participants,
+        'description': description
+      }, {
+        headers: authHeader()
       })
       .then(response => {
         if (response.message === "Create Event Successful") {
@@ -46,15 +46,15 @@ class EventService {
   accept(uid, event_id) {
     return axios
       .post(API_URL + "accept-event", {
-        headers: authHeader(), data: {
-          'uid': uid,
-          'id': event_id,
-        }
+        'uid': uid,
+        'id': event_id,
+      }, {
+        headers: authHeader(),
       })
       .then(response => {
         if (response.message === "Accept Event Successful") {
           // reload user data - for past andavailable events?
-          response['accepted-events']
+          console.log("success")
         }
         return []
       });
@@ -63,10 +63,10 @@ class EventService {
   delete(uid, event_id) {
     return axios
       .post(API_URL + "delete-event", {
-        headers: authHeader(), data: {
-          'uid': uid,
-          'id': event_id,
-        }
+        'uid': uid,
+        'id': event_id,
+      }, {
+        headers: authHeader(),
       })
       .then(response => {
         if (response.message === "Request Successful") {
@@ -79,25 +79,30 @@ class EventService {
       });
   }
 
-  availbleEvents(uid) {
+  availableEvents(uid) {
+    console.log("fgdfs")
+    console.log(uid)
     return axios
-      .post(API_URL + "available-events", {
-        headers: authHeader(), data: {
+      .get(API_URL + "available-events", {
+        headers: authHeader(),
+        params: {
           'uid': uid
         }
       })
       .then(response => {
-        if (response.message === "Request Successful") {
-          return response.events
+        if (response.data.message === "Request Successful") {
+          return response.data.events
+        } else {
+          throw Error('failed getting events')
         }
-        return []
       });
   }
 
   pastEvents(uid) {
     return axios
-      .post(API_URL + "past-events", {
-        headers: authHeader(), data: {
+      .get(API_URL + "past-events", {
+        headers: authHeader(),
+        params: {
           'uid': uid
         }
       })

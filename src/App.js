@@ -7,8 +7,6 @@ import Login from "./components/login.component";
 import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Profile from "./components/profile.component";
-import Challenge from "./components/challenge.component";
-import ReactTable from "react-table";
 
 const AuthContext = React.createContext(null);
 
@@ -28,13 +26,6 @@ const App = (props) => {
     setToken(null)
     alert("out");
   };
-
-  useEffect(() => {
-    const user = AuthService.getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-    }
-  }, []);
 
   return (
     <div>

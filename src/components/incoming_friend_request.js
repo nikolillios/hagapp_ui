@@ -1,27 +1,44 @@
-import React from "react";
+import React from 'react'
 import { useTable } from "react-table";
+import UserService from 'services/user.service';
+import AuthService from 'services/auth.service';
 
-function FriendsTable({ data }) {
+function IncomingFriendRequests({ data }) {
   // Use the state and functions returned from useTable to build your UI
 
   const columns = React.useMemo(() => [{
     Header: 'Username',
     accessor: 'username'
-  }
+  },
   ], []);
+
+  const acceptFriendRequest = (target_uid) => {
+    UserService.acceptFriendRequest(AuthService.getCurrentUser().uid, target_uid)
+  }
+
+  const rejectFriendRequest = (target_uid) => {
+    UserService.rejectFriendRequest(AuthService.getCurrentUser().uid, target_uid)
+  }
 
   const tableHooks = (hooks) => {
     hooks.visibleColumns.push((columns) => [
       ...columns,
       {
-        id: "Edit",
-        Header: "Edit",
+        id: "accept",
+        Header: "Accept",
         Cell: ({ row }) => (
-          row.values.status == "pending" ?
-            <button onClick={() => alert("editing: " + row.values.userEmail)}>
-              Accept
-            </button> :
-            <p></p>
+          <button onClick={() => acceptFriendRequest(row.values.username)}>
+            Accept
+          </button>
+        ),
+      },
+      {
+        id: "Reject",
+        Header: "reject",
+        Cell: ({ row }) => (
+          <button onClick={() => rejectFriendRequest(row.values.username)}>
+            Reject
+          </button>
         ),
       },
     ]);
@@ -61,4 +78,4 @@ function FriendsTable({ data }) {
   );
 }
 
-export default FriendsTable;
+export default IncomingFriendRequests;

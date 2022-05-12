@@ -14,7 +14,7 @@ class AuthService {
         console.log(response.data.accessToken)
         if (response.data.accessToken) {
           localStorage.setItem("user", JSON.stringify(response.data));
-          console.log('got token')
+          console.log(localStorage.getItem('user'))
           console.log('returning data:' + JSON.stringify(response.data))
           return response.data
         } else {
@@ -38,8 +38,8 @@ class AuthService {
   }
 
   getCurrentUser() {
-    console.log("log" + (localStorage.getItem('user') ? "null" : localStorage.getItem('user')))
-    return (localStorage.getItem('user') ? false : JSON.parse(localStorage.getItem('user')));
+    console.log("log: " + (localStorage.getItem('user')))
+    return (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
   }
 }
 export default new AuthService();
