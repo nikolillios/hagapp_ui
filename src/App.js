@@ -1,25 +1,31 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useState, useCallback } from "react";
 import { Route, Link, Routes, Router, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import AuthService from "./services/auth.service";
 import Login from "./components/login.component";
 import Register from "./components/register.component";
-import Home from "./components/profile.component";
-import Profile from "./components/home.component";
+import Home from "./components/home.component";
+import Profile from "./components/profile.component";
 import Challenge from "./components/challenge.component";
 import ReactTable from "react-table";
-import { PrivateRoute } from "components/PrivateRoute";
 
-function App(props) {
+const AuthContext = React.createContext(null);
+
+const App = (props) => {
   //this.logOut = this.logOut.bind(this);
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentUser, setCurrentUser] = useState(undefined)
+  let [navigate, setNavigate] = useState()
+  const [token, setToken] = useState(null);
 
-  let navigate = useNavigate();
+  const wrapperSetToken = useCallback(val => {
+    setToken(val);
+  }, [setToken]);
 
   const logout = (e) => {
     e.preventDefault();
     AuthService.logout();
+    setToken(null)
     alert("out");
   };
 
@@ -28,10 +34,7 @@ function App(props) {
     if (user) {
       setCurrentUser(user);
     }
-  });
-
-  console.log("current user " + currentUser);
-  console.log({ currentUser })
+  }, []);
 
   return (
     <div>
@@ -39,11 +42,11 @@ function App(props) {
         <Link to={"/"} className="navbar-brand">
           Hagapp
         </Link>
-        {currentUser ? (
+        {token ? (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link to={"/profile/"} className="nav-link">
-                {currentUser.username}
+                {token.username}
               </Link>
             </li>
             <li className="nav-item">
@@ -69,11 +72,10 @@ function App(props) {
       </nav>
       <div className="container mt-3">
         <Routes>
-          <Route path="/" element={(currentUser) ? <Home /> : < Login />} />
-          <Route path="/user" element={(currentUser) ? <Profile /> : < Login />} />
-          <Route path="/login" element={<Login navigate={navigate} />} />
+          <Route path="/home" element={(token) ? <Home /> : < Login setToken={wrapperSetToken} />} />
+          <Route path="/login" element={<Login setToken={wrapperSetToken} />} />
           <Route path="/register" element={< Register />} />
-          <Route path="/profile" element={currentUser ? <Profile /> : < Login />} />
+          <Route path="/profile" element={(token) ? <Profile /> : < Login setToken={wrapperSetToken} />} />
         </Routes>
       </div>
     </div>

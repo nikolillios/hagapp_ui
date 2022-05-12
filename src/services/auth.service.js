@@ -11,15 +11,15 @@ class AuthService {
         }
       })
       .then(response => {
-        // console.log(response.data)
+        console.log(response.data.accessToken)
         if (response.data.accessToken) {
           localStorage.setItem("user", JSON.stringify(response.data));
           console.log('got token')
+          console.log('returning data:' + JSON.stringify(response.data))
+          return response.data
+        } else {
+          throw Error("Invalid Credentials")
         }
-        console.log('returning data:' + JSON.stringify(response.data))
-        // need to load data for all fields
-        console.log("did not get token")
-        return response.data;
       });
   }
   logout() {
