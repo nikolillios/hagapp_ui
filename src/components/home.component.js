@@ -3,13 +3,13 @@ import AuthService from "../services/auth.service";
 import Table from './Table';
 import FriendsTable from './FriendsTable';
 import FriendRequest from './friend_request.component';
-import './profile.css';
 import SettledChallengesTable from './SettledChallengesTable';
 import IncomingFriendRequests from './incoming_friend_request';
 import { ChallengeDialogue } from './create_challenge.component';
 import UserService from 'services/user.service';
 import EventService from 'services/event.service';
 import AcceptedChallenges from './AccptedChallenges';
+import './home.css'
 
 
 export default function Home() {
@@ -37,68 +37,80 @@ export default function Home() {
     return Array.from(friends.map(name => ({ 'username': name })).values())
   }
 
+  const getFriends = async () => {
+    try {
+      const data = await UserService.getFriends(AuthService.getCurrentUser().uid)
+      setFriends(formatFriends(data.friends))
+      setIncomingRequests(formatFriends(data["incoming-friend-requests"]))
+      setOutgoingRequests(formatFriends(data["outgoing-friend-requests"]))
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
   useEffect(() => {
-    const getFriends = async () => {
-      try {
-        const data = await UserService.getFriends(AuthService.getCurrentUser().uid)
-        setFriends(formatFriends(data.friends))
-        setIncomingRequests(formatFriends(data["incoming-friend-requests"]))
-        setOutgoingRequests(formatFriends(data["outgoing-friend-requests"]))
-      } catch (e) {
-        console.log(e)
-      }
-    };
     getFriends()
   }, [])
 
+  const getSettled = async () => {
+    try {
+      const data = await EventService.pastEvents(AuthService.getCurrentUser().uid)
+      console.log("DATA")
+      console.log(data)
+      setSettled(data)
+      console.log(data)
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
   useEffect(() => {
-    const getSettled = async () => {
-      try {
-        const data = await EventService.pastEvents(AuthService.getCurrentUser().uid)
-        console.log("DATA")
-        console.log(data)
-        setSettled(data)
-        console.log(data)
-      } catch (e) {
-        console.log(e)
-      }
-    };
     getSettled()
   }, [])
 
+  const getOpen = async () => {
+    try {
+      const data = await EventService.availableEvents(AuthService.getCurrentUser().uid)
+      console.log("DATA")
+      console.log(data)
+      setChallenges(data)
+      console.log(data)
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
   useEffect(() => {
-    const getOpen = async () => {
-      try {
-        const data = await EventService.availableEvents(AuthService.getCurrentUser().uid)
-        console.log("DATA")
-        console.log(data)
-        setChallenges(data)
-        console.log(data)
-      } catch (e) {
-        console.log(e)
-      }
-    };
     getOpen()
   }, [])
 
+  const getAccepted = async () => {
+    try {
+      const data = await EventService.acceptedEvents(AuthService.getCurrentUser().uid)
+      console.log("DATA")
+      console.log(data)
+      setAccepted(data)
+      console.log(data)
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
   useEffect(() => {
-    const getAccepted = async () => {
-      try {
-        const data = await EventService.acceptedEvents(AuthService.getCurrentUser().uid)
-        console.log("DATA")
-        console.log(data)
-        setAccepted(data)
-        console.log(data)
-      } catch (e) {
-        console.log(e)
-      }
-    };
     getAccepted()
   }, [])
 
+  const reloadData = () => {
+    console.log("reloading")
+    getAccepted()
+    getOpen()
+    getSettled()
+  }
+
   return (
     <div className="container">
-      <div>
+      <div className="flex-child" >
+        <ChallengeDialogue />
         <h3>Friends</h3>
         <FriendsTable data={friends}></FriendsTable>
         <h3>Send Friend Request</h3>
@@ -106,19 +118,13 @@ export default function Home() {
         <h3>Incoming</h3>
         <IncomingFriendRequests data={incomingRequests}></IncomingFriendRequests>
       </div>
-      <div className="main">
-        <div>
-          <h1>Open challenges</h1>
-          <Table data={challenges} />
-          <h3>Accepted</h3>
-          <AcceptedChallenges data={accepted} />
-          <h3>Settled</h3>
-          <SettledChallengesTable data={settled}></SettledChallengesTable>
-        </div>
-      </div>
-      <div>
-        <h1>Create Challenge</h1>
-        <ChallengeDialogue />
+      <div class="flex-child">
+        <h1>Open challenges</h1>
+        <Table data={challenges} reloadData={reloadData} />
+        <h3>Accepted</h3>
+        <AcceptedChallenges data={accepted} reloadData={reloadData} />
+        <h3>Settled</h3>
+        <SettledChallengesTable data={settled}></SettledChallengesTable>
       </div>
     </div >
   );

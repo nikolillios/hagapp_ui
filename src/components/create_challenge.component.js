@@ -5,6 +5,7 @@ import TimePicker from 'react-datetime-picker'
 import DateTimePicker from 'react-datetime-picker'
 import LocationPicker from 'react-google-map-picker'
 import { useEffect } from 'react'
+import './create_challenge.css'
 const DefaultLocation = { lat: 0.0, lng: 0.0 }
 const DefaultZoom = 10
 export const ChallengeDialogue = () => {
@@ -72,15 +73,16 @@ export const ChallengeDialogue = () => {
 
   return (
     <div className="input-dialogue">
-      <h4>Description</h4>
+      <h3>Create Challenge</h3>
+      <h5>Description</h5>
       <input type="text" onChange={onChangeDescription}></input><br />
-      <h4>Event time</h4>
+      <h5>Event time</h5>
       <DateTimePicker onChange={setDatetime} value={datetime} /><br />
       <label>Enable location</label>
       <input type="checkbox" checked={checked} onChange={handleCheckChange}></input>
       {checked ?
         <div>
-          <h4>Location</h4>
+          <label>Location</label>
           <p>Address: {address}</p>
           <LocationPicker
             zoom={zoom}
@@ -93,11 +95,11 @@ export const ChallengeDialogue = () => {
           />
         </div> :
         <div>
-          <h4>Invites</h4>
+          <label>Invites</label>
           <input type="text" onChange={onChangeInvites} value={invites} placeholder="enter usernames delimited by commas"></input><br />
         </div>
       }
-      <h4>Num Participants</h4>
+      <label>Num Participants</label>
       <input type="number" onChange={onChangeNPart} min="1" max="10" value={nParticipants}></input>
       <button onClick={handleSubmit}>Create Challenge</button>
     </div>

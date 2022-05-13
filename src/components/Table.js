@@ -5,7 +5,7 @@ import AuthService from "services/auth.service";
 import EventService from "services/event.service";
 import './table.css'
 
-function Table({ data }) {
+function Table({ data, reloadData }) {
 
   const columns = React.useMemo(() => [{
     Header: 'Id',
@@ -27,6 +27,7 @@ function Table({ data }) {
 
   const acceptRequest = (event_id) => {
     EventService.accept(AuthService.getCurrentUser().uid, event_id)
+    reloadData()
   }
 
   // Use the state and functions returned from useTable to build your UI

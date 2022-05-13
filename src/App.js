@@ -28,7 +28,7 @@ const App = (props) => {
   };
 
   return (
-    <div>
+    <div className="app">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
           Hagapp
@@ -61,7 +61,7 @@ const App = (props) => {
           </div>
         )}
       </nav>
-      <div className="container mt-3">
+      <div className="the-container">
         <Routes>
           <Route path="/" element={(token) ? <Home /> : < Login setToken={wrapperSetToken} />} />
           <Route path="/home" element={(token) ? <Home /> : < Login setToken={wrapperSetToken} />} />

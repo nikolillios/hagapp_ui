@@ -4,7 +4,7 @@ import { useTable } from "react-table";
 import AuthService from "services/auth.service";
 import EventService from "services/event.service";
 
-function AcceptedChallenges({ data }) {
+function AcceptedChallenges({ data, reloadData }) {
 
   const columns = React.useMemo(() => [{
     Header: 'Id',
@@ -32,7 +32,17 @@ function AcceptedChallenges({ data }) {
     console.log()
     EventService.close(AuthService.getCurrentUser().uid, eid, result)
     setResolving(false)
+    setEid("")
+    setResult("")
+    reloadData()
+    const index = data.map(({ id }) => id).indexOf(eid)
+    data.splice(index, 1)
   }
+
+  useEffect(() => {
+    setResolving(false)
+    setEid("")
+  }, [])
 
   const onChangeResult = (e) => {
     console.log("try changing to:" + e.target.value)
@@ -57,8 +67,8 @@ function AcceptedChallenges({ data }) {
         Header: "Actions",
         Cell: ({ row }) => (
           row.values.uid == AuthService.getCurrentUser().uid ?
-            (<button onClick={showClosePanel(row.values.id)}>
-              Close
+            (<button onClick={() => showClosePanel(row.values.id)}>
+              Finish
             </button>) : <div></div>
 
         ),
@@ -99,6 +109,7 @@ function AcceptedChallenges({ data }) {
         </tbody>
       </table>
       <div hidden={!resolving}>
+        <p>Event id: {eid}</p>
         <input type="text" value={result} onChange={onChangeResult} placeholder="Result descriptoion"></input>
         <button onClick={closeChallenge} disabled={!resolving}>Close</button>
       </div>
