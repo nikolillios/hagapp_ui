@@ -26,6 +26,9 @@
     "validator": "^13.7.0",
     "web-vitals": "^2.1.4"
   },
+  "engines": {
+    "node": "10.0"
+  },
   "scripts": {
     "start": "npm start",
     "start-backend": "cd ../hagapp && flask run --no-debugger",
