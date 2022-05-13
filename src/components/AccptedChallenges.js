@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTable } from "react-table";
 import AuthService from "services/auth.service";
 import EventService from "services/event.service";
 
 function AcceptedChallenges({ data }) {
+
+  const [result, setResult] = useState("")
 
   const columns = React.useMemo(() => [{
     Header: 'Id',
@@ -24,7 +26,13 @@ function AcceptedChallenges({ data }) {
   ], []);
 
   const closeChallenge = (eid) => {
-    EventService.close(eid)
+    EventService.close(AuthService.getCurrentUser().uid, eid, result)
+  }
+
+  const onChangeResult = (e) => {
+    console.log("try changing to:" + e.target.value)
+    setResult(e.target.value)
+    console.log("changed to : " + result)
   }
 
   // Use the state and functions returned from useTable to build your UI
@@ -35,13 +43,21 @@ function AcceptedChallenges({ data }) {
         id: "Actions",
         Header: "Actions",
         Cell: ({ row }) => (
-          row.values.uid == AuthService ?
+          row.values.uid == AuthService.getCurrentUser().uid ?
             (<button onClick={() => closeChallenge(row.values.id)}>
-              Accept
+              Close
             </button>) : <div></div>
 
         ),
       },
+      {
+        id: "result",
+        Header: "Result",
+        Cell: ({ row }) => (row.values.uid === AuthService.getCurrentUser().uid ?
+          <input type="text" onChange={(e) => onChangeResult(e)}></input> :
+          <div></div>
+        )
+      }
     ]);
   };
 

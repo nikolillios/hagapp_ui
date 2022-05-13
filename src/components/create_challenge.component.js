@@ -35,7 +35,11 @@ export const ChallengeDialogue = () => {
   }
 
   const handleSubmit = () => {
-    EventService.create(AuthService.getCurrentUser().uid, description, invites.replace(' ', ''), datetime, nParticipants)
+    if (checked) {
+
+    } else {
+      EventService.create(AuthService.getCurrentUser().uid, description, invites.replace(' ', ''), datetime, nParticipants)
+    }
   }
 
   useEffect(() => {
@@ -55,10 +59,6 @@ export const ChallengeDialogue = () => {
     getCurrentLocation()
   }, [])
 
-  useEffect(() => {
-
-  })
-
 
   const handleLocationChange = ({ position, address, places }) => {
     setPos(position)
@@ -75,24 +75,30 @@ export const ChallengeDialogue = () => {
       <h4>Description</h4>
       <input type="text" onChange={onChangeDescription}></input><br />
       <h4>Event time</h4>
-      <DateTimePicker onChange={setDatetime} value={datetime} />
+      <DateTimePicker onChange={setDatetime} value={datetime} /><br />
+      <label>Enable location</label>
       <input type="checkbox" checked={checked} onChange={handleCheckChange}></input>
-      { }
-      <h4>Location</h4>
-      <p>Address: {address}</p>
-      <LocationPicker
-        zoom={zoom}
-        mapTypeId="roadmap"
-        style={{ height: '400px' }}
-        defaultPosition={pos}
-        onChangeLocation={handleLocationChange}
-        onChangeZoom={handleChangeZoom}
-        apiKey=""
-      />
+      {checked ?
+        <div>
+          <h4>Location</h4>
+          <p>Address: {address}</p>
+          <LocationPicker
+            zoom={zoom}
+            mapTypeId="roadmap"
+            style={{ height: '400px' }}
+            defaultPosition={pos}
+            onChangeLocation={handleLocationChange}
+            onChangeZoom={handleChangeZoom}
+            apiKey=""
+          />
+        </div> :
+        <div>
+          <h4>Invites</h4>
+          <input type="text" onChange={onChangeInvites} value={invites} placeholder="enter usernames delimited by commas"></input><br />
+        </div>
+      }
       <h4>Num Participants</h4>
       <input type="number" onChange={onChangeNPart} min="1" max="10" value={nParticipants}></input>
-      <h4>Invites</h4>
-      <input type="text" onChange={onChangeInvites} value={invites} placeholder="enter usernames delimited by commas"></input><br />
       <button onClick={handleSubmit}>Create Challenge</button>
     </div>
   )

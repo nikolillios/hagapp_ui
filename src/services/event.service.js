@@ -4,32 +4,39 @@ const API_URL = "https://hagapp-api.azure-api.net/event/";
 class EventService {
 
   create(uid, description, offered_users, event_time, num_participants) {
+    console.log("props")
+    console.log(offered_users)
+    console.log(event_time)
     return axios
       .post(API_URL + "create-event", {
         'uid': uid,
-        'id': Math.floor(Math.random() * 1e10),
-        'offered-users': offered_users,
+        'id': Math.floor(Math.random() * 1e10).toString(),
+        'offered-uids': offered_users,
         'event-time': event_time,
         'num-participants': num_participants,
-        'description': description
+        'notes': description
       }, {
         headers: authHeader()
       })
       .then(response => {
         if (response.message === "Create Event Successful") {
           // reload user data
+        } else {
+          console.log(response)
         }
       });
   }
 
-  close(uid, event_id) {
+  close(uid, event_id, result) {
     return axios
-      .get(API_URL + "close-event", { headers: authHeader() },
+      .post(API_URL + "close-event", {
+        'uid': uid,
+        'id': event_id,
+        'result': result,
+        'additional-notes': ""
+      },
         {
-          params: {
-            'uid': uid,
-            'id': event_id,
-          }
+          headers: authHeader()
         })
       .then(response => {
         if (response.message === "Request Successful") {
@@ -45,28 +52,31 @@ class EventService {
 
   accept(uid, event_id) {
     return axios
-      .post(API_URL + "accept-event", {
-        'uid': uid,
-        'id': event_id,
-      }, {
+      .get(API_URL + "accept-event", {
         headers: authHeader(),
+        params: {
+          'uid': uid,
+          'id': event_id,
+        }
       })
       .then(response => {
         if (response.message === "Accept Event Successful") {
           // reload user data - for past andavailable events?
           console.log("success")
+        } else {
+          console.log(response)
         }
-        return []
       });
   }
 
   delete(uid, event_id) {
     return axios
-      .post(API_URL + "delete-event", {
-        'uid': uid,
-        'id': event_id,
-      }, {
+      .get(API_URL + "delete-event", {
         headers: authHeader(),
+        params: {
+          'uid': uid,
+          'id': event_id,
+        }
       })
       .then(response => {
         if (response.message === "Request Successful") {

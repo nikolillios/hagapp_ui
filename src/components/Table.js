@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
 import React from "react";
 import { useTable } from "react-table";
+import AuthService from "services/auth.service";
+import EventService from "services/event.service";
 import './table.css'
 
 function Table({ data }) {
@@ -23,6 +25,10 @@ function Table({ data }) {
   },
   ], []);
 
+  const acceptRequest = (event_id) => {
+    EventService.accept(AuthService.getCurrentUser().uid, event_id)
+  }
+
   // Use the state and functions returned from useTable to build your UI
   const tableHooks = (hooks) => {
     hooks.visibleColumns.push((columns) => [
@@ -31,11 +37,9 @@ function Table({ data }) {
         id: "Actions",
         Header: "Actions",
         Cell: ({ row }) => (
-          row.values.status == "open" ?
-            (<button onClick={() => alert("editing: " + row.values.userEmail)}>
-              Accept
-            </button>) : <div></div>
-
+          <button onClick={() => acceptRequest(row.values.id)}>
+            Accept
+          </button>
         ),
       },
     ]);
