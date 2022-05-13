@@ -54,13 +54,12 @@ class LocationService {
 
   accept(uid, event_id, location) {
     return axios
-      .get(API_URL + "accept-location-event", {
-        headers: authHeader(),
-        params: {
-          'uid': uid,
-          'id': event_id,
-          'loc': location
-        }
+      .post(API_URL + "accept-location-event", {
+        'uid': uid,
+        'id': event_id,
+        'loc': location
+      }, {
+        headers: authHeader()
       })
       .then(response => {
         if (response.message === "Accept Event Successful") {
@@ -74,12 +73,11 @@ class LocationService {
 
   delete(uid, event_id) {
     return axios
-      .get(API_URL + "delete-location-event", {
-        headers: authHeader(),
-        params: {
-          'uid': uid,
-          'id': event_id,
-        }
+      .post(API_URL + "delete-location-event", {
+        'uid': uid,
+        'id': event_id,
+      }, {
+        headers: authHeader()
       })
       .then(response => {
         if (response.message === "Request Successful") {
@@ -112,43 +110,6 @@ class LocationService {
         }
       });
   }
-
-  // pastEvents(uid) {
-  //   return axios
-  //     .get(API_URL + "past-events", {
-  //       headers: authHeader(),
-  //       params: {
-  //         'uid': uid
-  //       }
-  //     })
-  //     .then(response => {
-  //       console.log(response.data)
-  //       if (response.data.message === "Request Successful") {
-  //         return response.data["past-events"]
-  //       } else {
-  //         throw Error("bad events")
-  //       }
-  //     });
-  // }
-
-  // acceptedEvents(uid) {
-  //   return axios
-  //     .get(API_URL + "accepted-events", {
-  //       headers: authHeader(),
-  //       params: {
-  //         'uid': uid
-  //       }
-  //     })
-  //     .then(response => {
-  //       console.log(response.data)
-  //       if (response.data.message === "Request Successful") {
-  //         return response.data["accepted-events"]
-  //       } else {
-  //         throw Error("bad events")
-  //       }
-  //     });
-  // }
-
 }
 
 export default new LocationService();
