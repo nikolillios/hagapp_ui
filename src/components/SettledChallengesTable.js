@@ -1,8 +1,11 @@
 import { render } from "@testing-library/react";
 import React from "react";
+import { useEffect, useState } from "react";
 import { useTable } from "react-table";
 
 function SettledChallengesTable({ data }) {
+
+  const [dataMemo, setDataMemo] = useState([])
 
   const columns = React.useMemo(() => [{
     Header: 'Id',
@@ -14,7 +17,7 @@ function SettledChallengesTable({ data }) {
   },
   {
     Header: 'Description',
-    accessor: 'description',
+    accessor: 'notes',
   },
   {
     Header: 'Result',
@@ -25,6 +28,7 @@ function SettledChallengesTable({ data }) {
     accessor: 'additional-notes',
   },
   ], []);
+
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({

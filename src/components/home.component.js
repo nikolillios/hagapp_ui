@@ -1,4 +1,3 @@
-import { getByTestId } from '@testing-library/react';
 import React, { Component, useState, Form, useEffect, } from 'react';
 import AuthService from "../services/auth.service";
 import Table from './Table';
@@ -28,6 +27,7 @@ export default function Home() {
   ]);
   const [challenges, setChallenges] = useState([])
   const [settled, setSettled] = useState([])
+  const [accepted, setAccepted] = useState([])
 
   const [friends, setFriends] = useState([])
   const [incomingRequests, setIncomingRequests] = useState([])
@@ -58,11 +58,42 @@ export default function Home() {
         console.log("DATA")
         console.log(data)
         setSettled(data)
+        console.log(data)
       } catch (e) {
         console.log(e)
       }
     };
     getSettled()
+  }, [])
+
+  useEffect(() => {
+    const getOpen = async () => {
+      try {
+        const data = await EventService.availableEvents(AuthService.getCurrentUser().uid)
+        console.log("DATA")
+        console.log(data)
+        setChallenges(data)
+        console.log(data)
+      } catch (e) {
+        console.log(e)
+      }
+    };
+    getOpen()
+  }, [])
+
+  useEffect(() => {
+    const getAccepted = async () => {
+      try {
+        const data = await EventService.acceptedEvents(AuthService.getCurrentUser().uid)
+        console.log("DATA")
+        console.log(data)
+        setAccepted(data)
+        console.log(data)
+      } catch (e) {
+        console.log(e)
+      }
+    };
+    getAccepted()
   }, [])
 
   return (
@@ -78,11 +109,11 @@ export default function Home() {
       <div className="main">
         <div>
           <h1>Open challenges</h1>
-          <Table data={React.useMemo(() => challenges, [])} />
+          <Table data={challenges} />
           <h3>Accepted</h3>
-          <AcceptedChallenges data={React.useMemo(() => challenges, [])} />
+          <AcceptedChallenges data={accepted} />
           <h3>Settled</h3>
-          <SettledChallengesTable data={React.useMemo(() => settled, [])}></SettledChallengesTable>
+          <SettledChallengesTable data={settled}></SettledChallengesTable>
         </div>
       </div>
       <div>

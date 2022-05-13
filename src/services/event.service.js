@@ -107,13 +107,30 @@ class EventService {
         }
       })
       .then(response => {
-        if (response.message === "Request Successful") {
-          return {
-            'past-events': response['past-events'],
-            'accepted-events': response['accepted-events']
-          }
+        console.log(response.data)
+        if (response.data.message === "Request Successful") {
+          return response.data["past-events"]
+        } else {
+          throw Error("bad events")
         }
-        return []
+      });
+  }
+
+  acceptedEvents(uid) {
+    return axios
+      .get(API_URL + "accepted-events", {
+        headers: authHeader(),
+        params: {
+          'uid': uid
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+        if (response.data.message === "Request Successful") {
+          return response.data["accepted-events"]
+        } else {
+          throw Error("bad events")
+        }
       });
   }
 

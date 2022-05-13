@@ -19,9 +19,12 @@ class UserService {
       headers: authHeader(),
       params: { 'uid': uid, 'target-uid': target_uid }
     }).then(response => {
-      if (response.message === "Request Successful")
+      if (response.message === "Request Successful") {
         // reload user datawith api call and bind results
         return response.data
+      } else {
+        console.log(response)
+      }
     });
   }
 
@@ -30,9 +33,12 @@ class UserService {
       headers: authHeader(),
       params: { 'uid': uid, 'target-uid': target_uid },
     }).then(response => {
-      if (response.message === "Request Successful")
+      if (response.message === "Request Successful") {
         // reload user datawith api call and bind results
         return response.data
+      } else {
+        console.log(response)
+      }
     });
   }
 

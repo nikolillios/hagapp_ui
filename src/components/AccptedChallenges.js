@@ -1,5 +1,7 @@
 import React from "react";
 import { useTable } from "react-table";
+import AuthService from "services/auth.service";
+import EventService from "services/event.service";
 
 function AcceptedChallenges({ data }) {
 
@@ -21,11 +23,33 @@ function AcceptedChallenges({ data }) {
   }
   ], []);
 
+  const closeChallenge = (eid) => {
+    EventService.close(eid)
+  }
+
+  // Use the state and functions returned from useTable to build your UI
+  const tableHooks = (hooks) => {
+    hooks.visibleColumns.push((columns) => [
+      ...columns,
+      {
+        id: "Actions",
+        Header: "Actions",
+        Cell: ({ row }) => (
+          row.values.uid == AuthService ?
+            (<button onClick={() => closeChallenge(row.values.id)}>
+              Accept
+            </button>) : <div></div>
+
+        ),
+      },
+    ]);
+  };
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
-    });
+    }, tableHooks);
 
   // Render the UI for your table
   return (
