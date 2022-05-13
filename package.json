@@ -2,6 +2,7 @@
   "name": "client_ui",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://627e41f644bbb461ba8413d7--melodious-churros-513940.netlify.app:8000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
