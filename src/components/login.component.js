@@ -25,7 +25,6 @@ const Login = ({ setToken }) => {
   const [form, setForm] = useState()
   const [loginSuccess, setLoginSuccess] = useState(false)
 
-  const [checkBtn, setCheckBtn] = useState()
 
   const [localToken, setLocalToken] = useState(null)
 

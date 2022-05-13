@@ -28,6 +28,10 @@ class EventService {
   }
 
   close(uid, event_id, result) {
+    console.log("things")
+    console.log(uid)
+    console.log(event_id)
+    console.log(result)
     return axios
       .post(API_URL + "close-event", {
         'uid': uid,

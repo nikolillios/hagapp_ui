@@ -1,11 +1,10 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useTable } from "react-table";
 import AuthService from "services/auth.service";
 import EventService from "services/event.service";
 
 function AcceptedChallenges({ data }) {
-
-  const [result, setResult] = useState("")
 
   const columns = React.useMemo(() => [{
     Header: 'Id',
@@ -25,14 +24,28 @@ function AcceptedChallenges({ data }) {
   }
   ], []);
 
-  const closeChallenge = (eid) => {
+  const [result, setResult] = useState("")
+  const [resolving, setResolving] = useState(false)
+  const [eid, setEid] = useState("")
+
+  const closeChallenge = () => {
+    console.log()
     EventService.close(AuthService.getCurrentUser().uid, eid, result)
+    setResolving(false)
   }
 
   const onChangeResult = (e) => {
     console.log("try changing to:" + e.target.value)
     setResult(e.target.value)
     console.log("changed to : " + result)
+  }
+
+  const showClosePanel = (id) => {
+    setResolving(true)
+    setEid(id)
+    console.log("print test")
+    console.log(eid)
+    console.log(resolving)
   }
 
   // Use the state and functions returned from useTable to build your UI
@@ -44,19 +57,11 @@ function AcceptedChallenges({ data }) {
         Header: "Actions",
         Cell: ({ row }) => (
           row.values.uid == AuthService.getCurrentUser().uid ?
-            (<button onClick={() => closeChallenge(row.values.id)}>
+            (<button onClick={showClosePanel(row.values.id)}>
               Close
             </button>) : <div></div>
 
         ),
-      },
-      {
-        id: "result",
-        Header: "Result",
-        Cell: ({ row }) => (row.values.uid === AuthService.getCurrentUser().uid ?
-          <input type="text" onChange={(e) => onChangeResult(e)}></input> :
-          <div></div>
-        )
       }
     ]);
   };
@@ -69,29 +74,35 @@ function AcceptedChallenges({ data }) {
 
   // Render the UI for your table
   return (
-    <table {...getTableProps()} border="1">
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-              })}
+    <div>
+      <table {...getTableProps()} border="1">
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <div hidden={!resolving}>
+        <input type="text" value={result} onChange={onChangeResult} placeholder="Result descriptoion"></input>
+        <button onClick={closeChallenge} disabled={!resolving}>Close</button>
+      </div>
+    </div>
   );
 }
 
