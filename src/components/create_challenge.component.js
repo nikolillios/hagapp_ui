@@ -8,7 +8,7 @@ import './create_challenge.css'
 import LocationService from 'services/location.service'
 const DefaultLocation = { lat: 0.0, lng: 0.0 }
 const DefaultZoom = 10
-export const ChallengeDialogue = () => {
+export const ChallengeDialogue = ({ reloadData }) => {
   const [description, setDescription] = useState("")
   const [invites, setInvites] = useState("")
   const [nParticipants, setNParticipants] = useState(1)
@@ -47,6 +47,11 @@ export const ChallengeDialogue = () => {
     } else {
       EventService.create(AuthService.getCurrentUser().uid, description, invites.replace(' ', ''), datetime, nParticipants)
     }
+    reloadData()
+    setNParticipants(1)
+    setRadius(5)
+    setInvites([])
+    setDescription("")
   }
 
   useEffect(() => {

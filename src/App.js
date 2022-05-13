@@ -14,7 +14,6 @@ const AuthContext = React.createContext(null);
 const App = (props) => {
   //this.logOut = this.logOut.bind(this);
   const [currentUser, setCurrentUser] = useState(undefined)
-  let [navigate, setNavigate] = useState()
   const [token, setToken] = useState(null);
 
   const wrapperSetToken = useCallback(val => {

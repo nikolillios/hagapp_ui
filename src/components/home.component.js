@@ -39,6 +39,7 @@ export default function Home() {
   const [friends, setFriends] = useState([])
   const [incomingRequests, setIncomingRequests] = useState([])
   const [outgoingRequests, setOutgoingRequests] = useState([])
+  const [watchID, setWatchID] = useState([])
 
   const formatFriends = (friends) => {
     return Array.from(friends.map(name => ({ 'username': name })).values())
@@ -176,15 +177,17 @@ export default function Home() {
   //     console.log(e)
   //   }
   // };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      reloadData()
+    }, 60000)
+  })
+
 
   useEffect(() => {
     const getCurrentLocation = () => {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
-          console.log('coords')
-          console.log(position.coords)
-          console.log(position.coords.latitude)
-          console.log(typeof (position.coords.longitude))
           const formatted = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -193,10 +196,7 @@ export default function Home() {
           setLat(formatted.lat)
           setLng(formatted.lng)
           const data = LocationService.availableEvents(AuthService.getCurrentUser().uid, `${position.coords.latitude},${position.coords.longitude}`).then((res) => { setLocation(res); console.log('res: ' + res) })
-          console.log("got location")
-          console.log(data)
           // setLocation(data)
-          console.log(data)
         }, () => { })
       }
     }
@@ -206,7 +206,6 @@ export default function Home() {
   }, [])
 
   const reloadData = () => {
-    console.log("reloading")
     getAccepted()
     getOpen()
     getSettled()
@@ -215,10 +214,6 @@ export default function Home() {
     const getCurrentLocation = () => {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
-          console.log('coords')
-          console.log(position.coords)
-          console.log(position.coords.latitude)
-          console.log(typeof (position.coords.longitude))
           const formatted = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -227,21 +222,45 @@ export default function Home() {
           setLat(formatted.lat)
           setLng(formatted.lng)
           const data = LocationService.availableEvents(AuthService.getCurrentUser().uid, `${position.coords.latitude},${position.coords.longitude}`).then(res => setLocation(res))
-          console.log("got location")
-          console.log(data)
-          // setLocation(data)
-          console.log(data)
         }, () => { })
       }
     }
     getCurrentLocation()
   }
 
+  useEffect(() => {
+    setWatchID(navigator.geolocation.watchPosition((lastPosition) => {
+      const getCurrentLocation = () => {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            const formatted = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            }
+            console.log(formatted)
+            setLat(formatted.lat)
+            setLng(formatted.lng)
+            const data = LocationService.availableEvents(AuthService.getCurrentUser().uid, `${position.coords.latitude},${position.coords.longitude}`).then((res) => { setLocation(res); console.log('res: ' + res) })
+            console.log("got location")
+            console.log(data)
+            // setLocation(data)
+            console.log(data)
+          }, () => { })
+        }
+      }
+      getCurrentLocation()
+    }, (error) => alert.JSON.stringify(error))
+
+      // getPosition()
+      // getLocation()
+    )
+  }, [])
+
 
   return (
     <div className="container">
       <div className="flex-child" >
-        <ChallengeDialogue />
+        <ChallengeDialogue reloadData={reloadData} />
         <h3>Friends</h3>
         <FriendsTable data={friends}></FriendsTable>
         <h3>Send Friend Request</h3>
