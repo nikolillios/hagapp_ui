@@ -7,6 +7,7 @@ import Login from "./components/login.component";
 import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Profile from "./components/profile.component";
+import { Helmet } from "react-helmet";
 
 const AuthContext = React.createContext(null);
 
@@ -29,6 +30,11 @@ const App = (props) => {
 
   return (
     <div className="app">
+      <Helmet>
+        <script async
+          src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ZoRawdEcGCJbSMAiEV6qcxIdyfwNDsI&callback=initMap'>
+        </script>
+      </Helmet>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
           Hagapp

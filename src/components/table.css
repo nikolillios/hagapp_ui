@@ -6,10 +6,11 @@ table {
   min-width: 200px;
   width: 100%;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  background-color: aliceblue;
 }
 
 thead tr {
-  background-color: darkolivegreen;
+  background-color: black;
   color: #ffffff;
   text-align: left;
 }

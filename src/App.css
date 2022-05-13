@@ -71,3 +71,7 @@ label {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
+
+.app {
+  background-color: #a2b0ba;
+}

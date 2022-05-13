@@ -11,7 +11,9 @@ root.render(
 
   <BrowserRouter>
     <Helmet>
-      <script src="https://maps.googleapis.com/maps/api/js?&v=3.exp&libraries=geometry,drawing,places"></script>
+      <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ZoRawdEcGCJbSMAiEV6qcxIdyfwNDsI&callback=initMap">
+      </script>
     </Helmet>
     <App />
   </BrowserRouter>

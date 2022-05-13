@@ -4,12 +4,14 @@
   "private": true,
   "proxy": "https://627e41f644bbb461ba8413d7--melodious-churros-513940.netlify.app:8000",
   "dependencies": {
+    "@react-google-maps/api": "^2.10.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.1.3",
     "express": "^4.18.1",
+    "google-map-react": "^2.1.10",
     "package.json": "^2.0.1",
     "react": "^18.1.0",
     "react-build": "^1.0.8",
@@ -31,7 +33,7 @@
     "node": "10.0"
   },
   "scripts": {
-    "start": "npm start",
+    "start": "react-scripts start",
     "start-backend": "cd ../hagapp && flask run --no-debugger",
     "build": "set \"CI=false\" && react-scripts build",
     "test": "react-scripts test",

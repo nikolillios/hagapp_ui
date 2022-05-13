@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import AuthService from 'services/auth.service'
 import EventService from 'services/event.service'
-import TimePicker from 'react-datetime-picker'
 import DateTimePicker from 'react-datetime-picker'
-import LocationPicker from 'react-google-map-picker'
+import LocationPicker from 'react-location-picker'
 import { useEffect } from 'react'
 import './create_challenge.css'
 const DefaultLocation = { lat: 0.0, lng: 0.0 }
@@ -37,7 +36,7 @@ export const ChallengeDialogue = () => {
 
   const handleSubmit = () => {
     if (checked) {
-
+      return
     } else {
       EventService.create(AuthService.getCurrentUser().uid, description, invites.replace(' ', ''), datetime, nParticipants)
     }
@@ -60,8 +59,17 @@ export const ChallengeDialogue = () => {
     getCurrentLocation()
   }, [])
 
+  useEffect(() => {
+    console.log("pos changed")
+    console.log(pos)
+  }, [pos])
+
 
   const handleLocationChange = ({ position, address, places }) => {
+    console.log("handling location casdfs")
+    console.log(position)
+    console.log(address)
+    console.log(places)
     setPos(position)
     setAddress(address)
   }
@@ -74,34 +82,38 @@ export const ChallengeDialogue = () => {
   return (
     <div className="input-dialogue">
       <h3>Create Challenge</h3>
-      <h5>Description</h5>
-      <input type="text" onChange={onChangeDescription}></input><br />
-      <h5>Event time</h5>
-      <DateTimePicker onChange={setDatetime} value={datetime} /><br />
-      <label>Enable location</label>
-      <input type="checkbox" checked={checked} onChange={handleCheckChange}></input>
-      {checked ?
-        <div>
-          <label>Location</label>
-          <p>Address: {address}</p>
-          <LocationPicker
-            zoom={zoom}
-            mapTypeId="roadmap"
-            style={{ height: '400px' }}
-            defaultPosition={pos}
-            onChangeLocation={handleLocationChange}
-            onChangeZoom={handleChangeZoom}
-            apiKey=""
-          />
-        </div> :
-        <div>
-          <label>Invites</label>
-          <input type="text" onChange={onChangeInvites} value={invites} placeholder="enter usernames delimited by commas"></input><br />
-        </div>
-      }
-      <label>Num Participants</label>
-      <input type="number" onChange={onChangeNPart} min="1" max="10" value={nParticipants}></input>
-      <button onClick={handleSubmit}>Create Challenge</button>
+      <div className="dialogue">
+        <h5>Description</h5>
+        <input type="text" onChange={onChangeDescription}></input><br />
+        <h5>Event time</h5>
+        <DateTimePicker onChange={setDatetime} value={datetime} /><br />
+        <label>Enable location</label>
+        <input type="checkbox" checked={checked} onChange={handleCheckChange}></input>
+        {checked ?
+          <div>
+            <label>Location</label>
+            <p>Address: {address}</p>
+            <p>Coords: {pos.lat} + "," + {pos.lng}</p>
+            <LocationPicker
+              zoom={zoom}
+              containerElement={<div style={{ height: '100%' }} />}
+              mapElement={<div style={{ height: '400px' }} />}
+              defaultPosition={pos}
+              onChange={handleLocationChange}
+              onChangeZoom={handleChangeZoom}
+              apiKey="AIzaSyC1ZoRawdEcGCJbSMAiEV6qcxIdyfwNDsI"
+            />
+          </div> :
+          <div>
+            <label>Invites</label>
+            <input type="text" onChange={onChangeInvites} value={invites} placeholder="enter usernames delimited by commas"></input><br />
+          </div>
+        }
+        <label>Num Participants</label>
+        <input type="number" onChange={onChangeNPart} min="1" max="10" value={nParticipants}></input>
+        <button onClick={handleSubmit}>Create Challenge</button>
+
+      </div>
     </div>
   )
 }
