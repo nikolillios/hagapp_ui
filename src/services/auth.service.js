@@ -2,7 +2,6 @@ import axios from "axios";
 const API_URL = "https://hagapp-api.azure-api.net/user/";
 class AuthService {
   login(username, password) {
-    console.log('logging in')
     return axios
       .get(API_URL + "login", {
         params: {
@@ -23,9 +22,7 @@ class AuthService {
       });
   }
   logout() {
-    alert("IN")
     localStorage.removeItem("user");
-    console.log(localStorage.getItem("user"));
   }
   register(username, email, password) {
     return axios.post(API_URL + "create-user", null, {

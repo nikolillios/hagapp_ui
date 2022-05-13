@@ -1,12 +1,25 @@
 import axios from "axios";
 import authHeader from './auth-header';
 const API_URL = "https://hagapp-api.azure-api.net/location/";
+
 class LocationService {
 
+  getCurrentLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log('coords')
+        console.log(position.coords)
+        const formatted = `${position.coords.latitude},${position.coords.longitude}`
+        return formatted
+      })
+    } else {
+      return '0.0,0.0'
+    }
+  }
+
   create(uid, description, location, distance, event_time, num_participants) {
-    console.log("props")
-    console.log(offered_users)
-    console.log(event_time)
+    console.log("loc")
+    console.log(location)
     return axios
       .post(API_URL + "create-location-event", {
         'uid': uid,
@@ -90,19 +103,20 @@ class LocationService {
       });
   }
 
-  availableEvents(uid, location) {
-    // location formatted as 'lat,lng'
+  async availableEvents(uid, currentPosition) {
     console.log("fgdfs")
-    console.log(uid)
+    console.log(currentPosition)
     return axios
       .get(API_URL + "available-location-events", {
         headers: authHeader(),
         params: {
           'uid': uid,
-          'loc': location
+          'loc': currentPosition,
         }
       })
       .then(response => {
+        console.log(response.data)
+        console.log(response.data.events)
         if (response.data.message === "Request Successful") {
           return response.data.events
         } else {

@@ -9,6 +9,8 @@ import { ChallengeDialogue } from './create_challenge.component';
 import UserService from 'services/user.service';
 import EventService from 'services/event.service';
 import AcceptedChallenges from './AccptedChallenges';
+import LocationService from 'services/location.service';
+import LocationEvents from './LocationEvents';
 import './home.css'
 
 
@@ -28,6 +30,11 @@ export default function Home() {
   const [challenges, setChallenges] = useState([])
   const [settled, setSettled] = useState([])
   const [accepted, setAccepted] = useState([])
+  const [location, setLocation] = useState([{ 'id': ' ', 'uid': ' ', 'notes': ' ', "loc": ' ', 'accepted-uids': [' '] }])
+  const [currentPosition, setCurrentPosition] = useState('0.0,0.0')
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  const [status, setStatus] = useState(null);
 
   const [friends, setFriends] = useState([])
   const [incomingRequests, setIncomingRequests] = useState([])
@@ -100,12 +107,136 @@ export default function Home() {
     getAccepted()
   }, [])
 
+  const toStr = ({ lat, lng }) => {
+    return `${lat},${lng}`
+  }
+
+  const setPosition = (position) => {
+    console.log("before set")
+    console.log(position)
+    setCurrentPosition(position)
+    console.log("after")
+    console.log(position)
+  }
+
+  useEffect(() => {
+    console.log("updating poistion ")
+  }, [currentPosition])
+
+  const getGeoInfo = () => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          let coordinates = `${position.coords.longitude}, 
+                   ${position.coords.latitude}`
+
+          resolve(coordinates);
+        },
+        error => reject(error),
+        { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+      )
+    })
+  }
+
+  const getPosition = () => {
+    if (!navigator.geolocation) {
+      setStatus('Geolocation is not supported by your browser');
+    } else {
+      setStatus('Locating...');
+      navigator.geolocation.getCurrentPosition((position) => {
+        setStatus(null);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+      }, () => {
+        setStatus('Unable to retrieve your location');
+        console.log(status)
+      });
+    }
+  }
+
+  const setLocationWrapper = () => {
+    setLocation(`${lat},${lng}`)
+  }
+
+  // const getLocation = async () => {
+  //   try {
+  //     // let coordinates = '';
+  //     // getGeoInfo.then(crdnts => coordinates = crdnts);
+  //     console.log("newasdfasdf")
+  //     // console.log(coordinates)
+  //     // now coordinates have all relevant data you wished
+  //     setLocationWrapper()
+  //     console.log(`${lat},${lng}`)
+  //     const data = await LocationService.availableEvents(AuthService.getCurrentUser().uid, status === null ? `${lat},${lng}` : '0.0,0.0')
+  //     console.log("got location")
+  //     console.log(data)
+  //     setLocation(data)
+  //     console.log(data)
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // };
+
+  useEffect(() => {
+    const getCurrentLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          console.log('coords')
+          console.log(position.coords)
+          console.log(position.coords.latitude)
+          console.log(typeof (position.coords.longitude))
+          const formatted = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }
+          console.log(formatted)
+          setLat(formatted.lat)
+          setLng(formatted.lng)
+          const data = LocationService.availableEvents(AuthService.getCurrentUser().uid, `${position.coords.latitude},${position.coords.longitude}`).then((res) => { setLocation(res); console.log('res: ' + res) })
+          console.log("got location")
+          console.log(data)
+          // setLocation(data)
+          console.log(data)
+        }, () => { })
+      }
+    }
+    getCurrentLocation()
+    // getPosition()
+    // getLocation()
+  }, [])
+
   const reloadData = () => {
     console.log("reloading")
     getAccepted()
     getOpen()
     getSettled()
+    getPosition()
+    // getLocation()
+    const getCurrentLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          console.log('coords')
+          console.log(position.coords)
+          console.log(position.coords.latitude)
+          console.log(typeof (position.coords.longitude))
+          const formatted = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }
+          console.log(formatted)
+          setLat(formatted.lat)
+          setLng(formatted.lng)
+          const data = LocationService.availableEvents(AuthService.getCurrentUser().uid, `${position.coords.latitude},${position.coords.longitude}`).then(res => setLocation(res))
+          console.log("got location")
+          console.log(data)
+          // setLocation(data)
+          console.log(data)
+        }, () => { })
+      }
+    }
+    getCurrentLocation()
   }
+
 
   return (
     <div className="container">
@@ -121,6 +252,8 @@ export default function Home() {
       <div class="flex-child">
         <h1>Open challenges</h1>
         <Table data={challenges} reloadData={reloadData} />
+        <p>Location Events</p>
+        <LocationEvents data={location} reloadData={reloadData}></LocationEvents>
         <h3>Accepted</h3>
         <AcceptedChallenges data={accepted} reloadData={reloadData} />
         <h3>Settled</h3>

@@ -30,11 +30,6 @@ const App = (props) => {
 
   return (
     <div className="app">
-      <Helmet>
-        <script async
-          src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ZoRawdEcGCJbSMAiEV6qcxIdyfwNDsI&callback=initMap'>
-        </script>
-      </Helmet>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
           Hagapp

@@ -35,8 +35,8 @@ function AcceptedChallenges({ data, reloadData }) {
     setEid("")
     setResult("")
     reloadData()
-    const index = data.map(({ id }) => id).indexOf(eid)
-    data.splice(index, 1)
+    // const index = data.map(({ id }) => id).indexOf(eid)
+    // data.splice(index, 1)
   }
 
   useEffect(() => {

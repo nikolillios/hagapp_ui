@@ -5,6 +5,7 @@ import DateTimePicker from 'react-datetime-picker'
 import LocationPicker from 'react-location-picker'
 import { useEffect } from 'react'
 import './create_challenge.css'
+import LocationService from 'services/location.service'
 const DefaultLocation = { lat: 0.0, lng: 0.0 }
 const DefaultZoom = 10
 export const ChallengeDialogue = () => {
@@ -15,6 +16,7 @@ export const ChallengeDialogue = () => {
   const [address, setAddress] = useState("")
   const [pos, setPos] = useState(DefaultLocation)
   const [checked, setChecked] = useState(false)
+  const [radius, setRadius] = useState(5)
 
   const [zoom, setZoom] = useState(DefaultZoom)
 
@@ -34,9 +36,14 @@ export const ChallengeDialogue = () => {
     setChecked((!checked))
   }
 
+  const toStr = ({ lat, lng }) => {
+    return lat.toString() + ',' + lng.toString()
+  }
+
   const handleSubmit = () => {
+    const id = AuthService.getCurrentUser().uid
     if (checked) {
-      return
+      LocationService.create(id, description, toStr(pos), radius, datetime, nParticipants)
     } else {
       EventService.create(AuthService.getCurrentUser().uid, description, invites.replace(' ', ''), datetime, nParticipants)
     }
@@ -53,7 +60,7 @@ export const ChallengeDialogue = () => {
             lng: position.coords.longitude,
           }
           setPos(formatted)
-        })
+        }, () => { })
       }
     }
     getCurrentLocation()
@@ -78,6 +85,10 @@ export const ChallengeDialogue = () => {
     setZoom(newZoom)
   }
 
+  const onChangeRadius = (e) => {
+    setRadius(e.target.value)
+  }
+
 
   return (
     <div className="input-dialogue">
@@ -94,6 +105,8 @@ export const ChallengeDialogue = () => {
             <label>Location</label>
             <p>Address: {address}</p>
             <p>Coords: {pos.lat} + "," + {pos.lng}</p>
+            <label>Radius: {radius}</label>
+            <input type="range" min="1" max="50" onChange={onChangeRadius} value={radius}></input>
             <LocationPicker
               zoom={zoom}
               containerElement={<div style={{ height: '100%' }} />}
